@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Orders - Amazon Clone</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f2f2f2;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .order-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .order-card h3 {
+      margin: 0 0 10px;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      border-bottom: 1px dashed #ccc;
+      padding-bottom: 6px;
+    }
+
+    .no-orders {
+      text-align: center;
+      font-size: 18px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Your Orders</h1>
+  <div id="orders-container">
+    <p class="no-orders">Loading your orders...</p>
+  </div>
+
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBnDGSg_K60_Tp7w13c-O8Jb9hLkErSCY8",
+      authDomain: "gamexd-110.firebaseapp.com",
+      projectId: "gamexd-110",
+      storageBucket: "gamexd-110.firebasestorage.app",
+      messagingSenderId: "501792431454",
+      appId: "1:501792431454:web:10024d189316ef9e2303cf"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const container = document.getElementById('orders-container');
+
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        container.innerHTML = '<p class="no-orders">Please <a href="index.html">login</a> to view your orders.</p>';
+        return;
+      }
+
+      db.collection("orders")
+        .where("uid", "==", user.uid)
+        .orderBy("timestamp", "desc")
+        .get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            container.innerHTML = '<p class="no-orders">No orders found.</p>';
+            return;
+          }
+
+          container.innerHTML = ""; // clear loading text
+
+          snapshot.forEach(doc => {
+            const order = doc.data();
+            const card = document.createElement("div");
+            card.className = "order-card";
+
+            const date = order.timestamp?.toDate().toLocaleString() || "Unknown Date";
+
+            let itemsHTML = "";
+            order.items.forEach(item => {
+              itemsHTML += `
+                <div class="order-item">
+                  <span>${item.name}</span>
+                  <strong>₹${item.price}</strong>
+                </div>
+              `;
+            });
+
+            card.innerHTML = `
+              <h3>Order ID: ${doc.id}</h3>
+              <p><strong>Date:</strong> ${date}</p>
+              ${itemsHTML}
+              <p><strong>Total Paid:</strong> ₹${order.total}</p>
+            `;
+            container.appendChild(card);
+          });
+        })
+        .catch(err => {
+          container.innerHTML = `<p class="no-orders">Error fetching orders: ${err.message}</p>`;
+        });
+    });   
+  </script>
+</body>
+</html>

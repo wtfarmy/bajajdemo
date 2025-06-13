@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bajaj Pulsar 150 Details</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .back-btn {
+      background: #007185;
+      color: white;
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .bike-detail {
+      display: flex;
+      flex-wrap: wrap;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .bike-img {
+      flex: 1 1 400px;
+      max-width: 100%;
+    }
+
+    .bike-img img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .bike-info {
+      flex: 1 1 500px;
+      padding: 30px;
+    }
+
+    .bike-info h1 {
+      margin-bottom: 10px;
+      color: #007185;
+    }
+
+    .price {
+      font-size: 24px;
+      color: #b12704;
+      margin: 10px 0;
+    }
+
+    .specs {
+      margin-top: 20px;
+    }
+
+    .specs li {
+      margin: 10px 0;
+      list-style: none;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 8px;
+    }
+
+    .buy-btn {
+      margin-top: 30px;
+      padding: 12px 25px;
+      font-size: 16px;
+      background-color: #ff5f00;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .buy-btn:hover {
+      background-color: #d94e00;
+    }
+
+    @media (max-width: 768px) {
+      .bike-detail {
+        flex-direction: column;
+      }
+
+      .bike-info {
+        padding: 20px;
+      }
+
+      .back-btn, .buy-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="back-btn" onclick="history.back()">← Back</button>
+
+    <div class="bike-detail">
+      <div class="bike-img">
+        <img src="bajaj-pulsar-150-2018-500x500.webp" alt="Bajaj Pulsar 150" />
+      </div>
+      <div class="bike-info">
+        <h1>Bajaj Pulsar 150</h1>
+        <div class="price">₹1,30,000 (Ex-showroom)</div>
+        <ul class="specs">
+          <li><strong>Engine:</strong> 149.5 cc, Single Cylinder, Air Cooled</li>
+          <li><strong>Max Power:</strong> 13.8 bhp @ 8500 rpm</li>
+          <li><strong>Torque:</strong> 13.25 Nm @ 6500 rpm</li>
+          <li><strong>Transmission:</strong> 5 Gears Manual</li>
+          <li><strong>Top Speed:</strong> ~110 km/h</li>
+          <li><strong>Mileage:</strong> 50 km/l (Approx.)</li>
+          <li><strong>Fuel Tank Capacity:</strong> 15 Litres</li>
+          <li><strong>Brakes:</strong> Disc (Front), Drum (Rear)</li>
+          <li><strong>Weight:</strong> 148 kg</li>
+          <li><strong>Variants:</strong> Single Disc, Twin Disc</li>
+        </ul>
+        <button class="buy-btn" onclick="buyNow()">Buy Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Razorpay Script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    function buyNow() {
+      const options = {
+        key: "YOUR_RAZORPAY_KEY", // Replace with your Razorpay key
+        amount: 13000000, // ₹1,30,000 in paise
+        currency: "INR",
+        name: "Bajaj Pulsar 150",
+        description: "Bike Purchase",
+        handler: function (response) {
+          alert("Payment successful! ID: " + response.razorpay_payment_id);
+        },
+        prefill: {
+          name: "Customer Name",
+          email: "example@gmail.com"
+        },
+        theme: {
+          color: "#ff5f00"
+        }
+      };
+      const rzp = new Razorpay(options);
+      rzp.open();
+    }
+  </script>
+</body>
+</html>
